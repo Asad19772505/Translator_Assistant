@@ -6,9 +6,10 @@ from docx import Document
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer
 from reportlab.lib.pagesizes import letter
 from reportlab.lib.styles import getSampleStyleSheet
+import os
 
-# --- GROQ Client ---
-client = Groq(api_key="your-groq-api-key")  # 🔁 Replace with your actual GROQ key
+# --- Secure API Key Retrieval ---
+client = Groq(api_key=st.secrets["groq"]["api_key"])  # or use os.getenv("GROQ_API_KEY")
 
 # --- App Title ---
 st.set_page_config(page_title="PDF Translator with GROQ", layout="centered")
@@ -33,7 +34,7 @@ if uploaded_file:
         with st.spinner("Translating with GROQ..."):
             prompt = f"Translate this Arabic (or other-language) text into professional English:\n\n{extracted_text}"
             response = client.chat.completions.create(
-                model="mixtral-8x7b-32768",  # You may switch to other GROQ models
+                model="mixtral-8x7b-32768",
                 messages=[
                     {"role": "system", "content": "You are a professional legal and document translator."},
                     {"role": "user", "content": prompt}
